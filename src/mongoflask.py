@@ -4,6 +4,7 @@ import isodate as iso
 from bson import ObjectId
 from flask.json import JSONEncoder
 from werkzeug.routing import BaseConverter
+from http import HTTPStatus
 
 
 class MongoJSONEncoder(JSONEncoder):
@@ -25,6 +26,21 @@ class ObjectIdConverter(BaseConverter):
 
 def find_restaurants(mongo, _id=None):
     query = {}
+    result = ''
     if _id:
-        query["_id"] = ObjectId(id)
-    return list(mongo.db.restaurant.find(query))
+        # Added "try" to catch invalid values for ObjectId
+        try:
+            query["_id"] = (ObjectId(_id))
+        except Exception as e:
+            return 'ID Error: Not valid ID specified'
+
+        # With "find_one" I get a json object
+        result = mongo.db.restaurant.find_one(query)
+        # Testing 'result' value for return 204 status code
+        if result is None:
+            result = '', HTTPStatus.NO_CONTENT
+
+    else:
+        result = list(mongo.db.restaurant.find(query))
+
+    return result
