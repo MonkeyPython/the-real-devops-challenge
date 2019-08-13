@@ -3,9 +3,9 @@ FROM ubuntu
 RUN mkdir -p /opt/app/src
 
 COPY docker-entrypoint.sh /
-COPY requirements.txt /opt/app/requirements.txt
-COPY src/* /opt/app/src/
-COPY app.py /opt/app/
+COPY ../../requirements.txt /opt/app/requirements.txt
+COPY ../../src/* /opt/app/src/
+COPY ../../app.py /opt/app/
 
 RUN apt-get update && apt-get -y upgrade
 

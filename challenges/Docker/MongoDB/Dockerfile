@@ -64,7 +64,7 @@ EXPOSE 27017
 
 RUN mkdir -p /data/files
 
-COPY data/restaurant.json /data/files/
+COPY ../../data/restaurant.json /data/files/
 
 COPY docker-entrypoint.sh /
 RUN chmod +x docker-entrypoint.sh
