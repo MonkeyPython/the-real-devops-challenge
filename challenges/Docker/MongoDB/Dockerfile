@@ -1,8 +1,11 @@
 FROM debian:jessie-slim
 
+COPY data-load.sh /
+
 RUN apt-get update && \
     apt-get install -y ca-certificates && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    chmod +x /data-load.sh
 
 RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 0C49F3730359A14518585931BC711F9BA15703C6 && \
     gpg --export $GPG_KEYS > /etc/apt/trusted.gpg.d/mongodb.gpg
@@ -18,18 +21,14 @@ RUN echo "/etc/apt/sources.list.d/${MONGO_PACKAGE%-unstable}.list"
 RUN apt-get update && \
     apt-get install -y ${MONGO_PACKAGE}=$MONGO_VERSION
 
+COPY data/restaurant.json /tmp/restaurant.json
+
 VOLUME ["/data/db"]
 
-COPY data/restaurant.json /tmp/
-
-COPY docker-entrypoint.sh /
-RUN chmod +x docker-entrypoint.sh
-
-
 EXPOSE 27017
-
-CMD ["./docker-entrypoint.sh"]
 
 WORKDIR /data
 
 CMD ["mongod", "--smallfiles"]
+
+CMD ["/data-load.sh"]
