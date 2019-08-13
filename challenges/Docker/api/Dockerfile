@@ -14,10 +14,10 @@ RUN apt-get -y install \
     python3-pip
 
 RUN pip3 install -r /opt/app/requirements.txt
-RUN chmod +x /docker-entrypoint.sh /opt/app/app.py  
+RUN chmod +x /docker-entrypoint.sh /opt/app/app.py
 
 EXPOSE 8080
 
-ENV MONGO_URI=mongodb://172.17.0.3:27017/servicesdb
+ENV MONGO_URI=mongodb://172.17.0.3:27017/servicesDB
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
