@@ -1,0 +1,24 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_URI=mongodb://172.17.0.3:27017/servicesDB
+    ports:
+      - "8080:8080"
+    links:
+      - mongodb
+    depends_on:
+      - mongodb
+
+  mongodb:
+    build:
+      context: ./MongoDB
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - /data/db
